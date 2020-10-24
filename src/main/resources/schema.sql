@@ -1,6 +1,16 @@
 create sequence company_sequence start 10000;
 create sequence product_sequence start 10000;
-create sequence user_sequence start 10000;
+create sequence users_sequence start 10000;
+
+create table users (
+    id bigint primary key not null default nextval('users_sequence'),
+    first_name varchar not null,
+    last_name varchar not null,
+    email varchar not null,
+    password varchar not null,
+    roles varchar not null
+);
+alter sequence users_sequence owned by users.id;
 
 create table company (
     id bigint primary key not null default nextval('company_sequence'),
@@ -17,10 +27,11 @@ create table company (
     mobile varchar not null,
     fax varchar,
     website varchar,
+    user_id bigint not null,
     updated_date timestamp not null default current_timestamp,
-    created_date timestamp not null default current_timestamp
+    created_date timestamp not null default current_timestamp,
+    foreign key (user_id) references users(id)
 );
-
 alter sequence company_sequence owned by company.id;
 
 create table product (
@@ -44,16 +55,7 @@ create table product (
     created_date timestamp not null default current_timestamp,
     foreign key (company_id) references company(id)
 );
-
 alter sequence product_sequence owned by product.id;
 
-create table users (
-    id bigint not null default nextval('user_sequence'),
-    first_name varchar not null,
-    last_name varchar not null,
-    email varchar not null,
-    password varchar not null,
-    roles varchar not null
-)
 
-alter sequence user_sequence owned by users.id;
+select * from company

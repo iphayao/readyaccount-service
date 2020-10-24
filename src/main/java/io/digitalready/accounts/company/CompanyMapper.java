@@ -14,6 +14,7 @@ public interface CompanyMapper {
     CompanyRespDto toDto(Company entity);
 
     @Mapping(target = "id", ignore = true)
+    @Mapping(target = "userId", ignore = true)
     @Mapping(target = "updatedDate", ignore = true)
     @Mapping(target = "createdDate", ignore = true)
     void update(Company source, @MappingTarget Company target);

@@ -1,5 +1,5 @@
 spring:
   r2dbc:
-    url: r2dbc:postgresql://localhost:5432/billarydb
+    url: r2dbc:postgresql://localhost:5432/ready_account_db
     username: postgres
     password: P@ssw0rd

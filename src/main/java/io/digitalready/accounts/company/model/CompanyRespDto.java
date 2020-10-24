@@ -4,6 +4,7 @@ import lombok.Data;
 
 @Data
 public class CompanyRespDto {
+    private Long id;
     private String type;
     private String name;
     private String nameEn;

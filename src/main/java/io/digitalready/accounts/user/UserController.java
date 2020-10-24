@@ -7,8 +7,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
 
-import java.security.Principal;
-
 @Slf4j
 @RestController
 @RequestMapping("/users")
@@ -22,8 +20,9 @@ public class UserController {
     }
 
     @GetMapping
-    public Mono<ApiResponse> getUser(Principal user) {
-        return userService.findUserByUsername(user.getName())
+    public Mono<ApiResponse> getUser() {
+        return userService.findCurrentUser()
+                .doOnSuccess(u -> log.info("Get info of user id: {}, username: {}", u.getId(), u.getEmail()))
                 .map(userMapper::toDto)
                 .map(ApiSuccessResponse::of);
     }
@@ -31,6 +30,7 @@ public class UserController {
     @PostMapping
     public Mono<ApiResponse> postUser(@RequestBody UserBodyDto userDto) {
         return userService.createNewUser(userMapper.toEntity(userDto))
+                .doOnSuccess(u -> log.info("Create user id: {}, username: {}", u.getId(), u.getEmail()))
                 .map(userMapper::toDto)
                 .map(ApiSuccessResponse::of);
     }

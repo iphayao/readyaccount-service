@@ -22,6 +22,7 @@ public class Company {
     private String mobile;
     private String fax;
     private String website;
+    private Long userId;
     private Timestamp updatedDate;
     private Timestamp createdDate;
 }
