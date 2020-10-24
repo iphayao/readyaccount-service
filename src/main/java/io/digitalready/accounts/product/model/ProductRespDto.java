@@ -1,11 +1,8 @@
 package io.digitalready.accounts.product.model;
 
-import io.digitalready.accounts.product.ProductType;
-import io.digitalready.accounts.product.VatType;
 import lombok.Data;
 
 import java.math.BigDecimal;
-import java.util.UUID;
 
 @Data
 public class ProductRespDto {

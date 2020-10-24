@@ -18,37 +18,41 @@ public class ProductController {
     }
 
     @GetMapping
-    public Mono<ApiResponse> getProducts() {
-        return productService.findProducts()
+    public Mono<ApiResponse> getProducts(@RequestHeader("Company-ID") Long companyId) {
+        return productService.findProducts(companyId)
                 .map(mapper::toDto)
                 .collectList()
                 .map(ApiSuccessResponse::of);
     }
 
     @GetMapping("/{id}")
-    public Mono<ApiResponse> getProductById(@PathVariable String id) {
-        return productService.findProductById(id)
+    public Mono<ApiResponse> getProductById(@RequestHeader("Company-ID") Long companyId,
+                                            @PathVariable Long id) {
+        return productService.findProductById(companyId, id)
                 .map(mapper::toDto)
                 .map(ApiSuccessResponse::of);
     }
 
     @PostMapping
-    public Mono<ApiResponse> postProduct(@RequestBody ProductBodyDto product) {
-        return productService.createNewProduct(mapper.toEntity(product))
+    public Mono<ApiResponse> postProduct(@RequestHeader("Company-ID") Long companyId,
+                                         @RequestBody ProductBodyDto product) {
+        return productService.createNewProduct(companyId, mapper.toEntity(product))
                 .map(mapper::toDto)
                 .map(ApiSuccessResponse::of);
     }
 
     @PutMapping("/{id}")
-    public Mono<ApiResponse> editProductById(@PathVariable String id, @RequestBody ProductBodyDto product) {
-        return productService.editProductById(id, mapper.toEntity(product))
+    public Mono<ApiResponse> editProductById(@RequestHeader("Company-ID") Long companyId,
+                                             @PathVariable Long id, @RequestBody ProductBodyDto product) {
+        return productService.editProductById(companyId, id, mapper.toEntity(product))
                 .map(mapper::toDto)
                 .map(ApiSuccessResponse::of);
     }
 
     @DeleteMapping("/{id}")
-    public Mono<Void> deleteProductById(@PathVariable String id) {
-        return productService.removeProductById(id);
+    public Mono<Void> deleteProductById(@RequestHeader("Company-ID") Long companyId,
+                                        @PathVariable Long id) {
+        return productService.removeProductById(companyId, id);
     }
 
 }

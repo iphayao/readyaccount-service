@@ -1,7 +1,5 @@
 package io.digitalready.accounts.product.model;
 
-import io.digitalready.accounts.product.ProductType;
-import io.digitalready.accounts.product.VatType;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
 

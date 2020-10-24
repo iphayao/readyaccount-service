@@ -6,8 +6,6 @@ import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import java.util.UUID;
-
 @Service
 public class ProductService {
     private final ProductRepository productRepository;
@@ -18,29 +16,30 @@ public class ProductService {
         this.productMapper = productMapper;
     }
 
-    public Flux<Product> findProducts() {
-        return productRepository.findAll();
+    public Flux<Product> findProducts(Long companyId) {
+        return productRepository.findByCompanyId(companyId);
     }
 
-    public Mono<Product> findProductById(String id) {
-        return productRepository.findById(UUID.fromString(id))
-                .switchIfEmpty(Mono.error(new ProductNotFoundException(id)));
+    public Mono<Product> findProductById(Long companyId, Long id) {
+        return productRepository.findByIdAndCompanyId(id, companyId)
+                .switchIfEmpty(Mono.error(new ProductNotFoundException(String.valueOf(id))));
     }
 
-    public Mono<Product> createNewProduct(Product product) {
+    public Mono<Product> createNewProduct(Long companyId, Product product) {
+        product.setCompanyId(companyId);
         return productRepository.save(product);
     }
 
-    public Mono<Product> editProductById(String id, Product product) {
-        return productRepository.findById(UUID.fromString(id))
+    public Mono<Product> editProductById(Long companyId, Long id, Product product) {
+        return productRepository.findByIdAndCompanyId(id, companyId)
                 .flatMap(p -> {
                     productMapper.update(product, p);
                     return productRepository.save(p);
                 });
     }
 
-    public Mono<Void> removeProductById(String id) {
-        return productRepository.findById(UUID.fromString(id))
+    public Mono<Void> removeProductById(Long companyId, Long id) {
+        return productRepository.findByIdAndCompanyId(id, companyId)
                 .flatMap(productRepository::delete);
     }
 
