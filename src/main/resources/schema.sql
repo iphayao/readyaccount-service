@@ -1,5 +1,6 @@
-CREATE SEQUENCE company_sequence start 10000;
-CREATE SEQUENCE product_sequence start 10000;
+create sequence company_sequence start 10000;
+create sequence product_sequence start 10000;
+create sequence user_sequence start 10000;
 
 create table company (
     id bigint primary key not null default nextval('company_sequence'),
@@ -45,3 +46,14 @@ create table product (
 );
 
 alter sequence product_sequence owned by product.id;
+
+create table users (
+    id bigint not null default nextval('user_sequence'),
+    first_name varchar not null,
+    last_name varchar not null,
+    email varchar not null,
+    password varchar not null,
+    roles varchar not null
+)
+
+alter sequence user_sequence owned by users.id;
