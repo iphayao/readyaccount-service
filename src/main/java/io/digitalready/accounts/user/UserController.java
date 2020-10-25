@@ -1,13 +1,11 @@
 package io.digitalready.accounts.user;
 
 import io.digitalready.accounts.common.model.ApiResponse;
-import io.digitalready.accounts.common.model.ApiSuccessResponse;
 import io.digitalready.accounts.user.model.UserBodyDto;
-import lombok.extern.slf4j.Slf4j;
+import io.digitalready.accounts.user.model.UserRespDto;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
 
-@Slf4j
 @RestController
 @RequestMapping("/users")
 public class UserController {
@@ -20,19 +18,17 @@ public class UserController {
     }
 
     @GetMapping
-    public Mono<ApiResponse> getUser() {
+    public Mono<ApiResponse<UserRespDto>> getUser() {
         return userService.findCurrentUser()
-                .doOnSuccess(u -> log.info("Get info of user id: {}, username: {}", u.getId(), u.getEmail()))
                 .map(userMapper::toDto)
-                .map(ApiSuccessResponse::of);
+                .map(ApiResponse::success);
     }
 
     @PostMapping
-    public Mono<ApiResponse> postUser(@RequestBody UserBodyDto userDto) {
+    public Mono<ApiResponse<UserRespDto>> postUser(@RequestBody UserBodyDto userDto) {
         return userService.createNewUser(userMapper.toEntity(userDto))
-                .doOnSuccess(u -> log.info("Create user id: {}, username: {}", u.getId(), u.getEmail()))
                 .map(userMapper::toDto)
-                .map(ApiSuccessResponse::of);
+                .map(ApiResponse::success);
     }
 
 }

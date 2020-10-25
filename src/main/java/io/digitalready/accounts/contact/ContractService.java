@@ -1,6 +1,5 @@
 package io.digitalready.accounts.contact;
 
-import io.digitalready.accounts.common.model.ApiResponse;
 import io.digitalready.accounts.contact.model.Contract;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
@@ -17,7 +16,7 @@ public class ContractService {
     }
 
     public Flux<Contract> findAllContract(Long companyId) {
-        return contractRepository.findAll();
+        return contractRepository.findByCompanyId(companyId);
     }
 
     public Mono<Contract> createNewContract(Long companyId, Contract contract) {
@@ -25,8 +24,8 @@ public class ContractService {
         return contractRepository.save(contract);
     }
 
-    public Mono<Contract> editContractById(Long companyId, Long id, Contract contract) {
-        return contractRepository.findByIdAndCompanyId(id, companyId)
+    public Mono<Contract> editContractById(Long companyId, Long contractId, Contract contract) {
+        return contractRepository.findByIdAndCompanyId(contractId, companyId)
                 .flatMap(c -> {
                     contractMapper.update(contract, c);
                     return contractRepository.save(c);
@@ -34,7 +33,13 @@ public class ContractService {
 
     }
 
-    public Mono<Contract> findContractById(Long companyId, Long id) {
-        return contractRepository.findByIdAndCompanyId(id, companyId);
+    public Mono<Contract> findContractById(Long companyId, Long contractId) {
+        return contractRepository.findByIdAndCompanyId(contractId, companyId);
     }
+
+    public Mono<Void> deleteContractById(Long companyId, Long contractId) {
+        return contractRepository.findByIdAndCompanyId(contractId, companyId)
+                .flatMap(contractRepository::delete);
+    }
+
 }

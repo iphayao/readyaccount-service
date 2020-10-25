@@ -2,12 +2,10 @@ package io.digitalready.accounts.company;
 
 import io.digitalready.accounts.company.model.Company;
 import io.digitalready.accounts.user.UserService;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-@Slf4j
 @Service
 public class CompanyService {
     private final CompanyRepository companyRepository;

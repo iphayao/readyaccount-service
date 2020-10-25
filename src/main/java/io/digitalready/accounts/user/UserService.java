@@ -3,7 +3,6 @@ package io.digitalready.accounts.user;
 import io.digitalready.accounts.common.exception.AuthenticationNotFoundException;
 import io.digitalready.accounts.common.exception.UserRegisteredException;
 import io.digitalready.accounts.user.model.User;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.ReactiveSecurityContextHolder;
 import org.springframework.security.core.context.SecurityContext;
@@ -11,7 +10,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
-@Slf4j
 @Service
 public class UserService {
     private final UserRepository userRepository;

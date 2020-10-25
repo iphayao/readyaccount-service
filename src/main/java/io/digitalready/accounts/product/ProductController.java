@@ -1,10 +1,12 @@
 package io.digitalready.accounts.product;
 
 import io.digitalready.accounts.common.model.ApiResponse;
-import io.digitalready.accounts.common.model.ApiSuccessResponse;
 import io.digitalready.accounts.product.model.ProductBodyDto;
+import io.digitalready.accounts.product.model.ProductRespDto;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/products")
@@ -18,41 +20,42 @@ public class ProductController {
     }
 
     @GetMapping
-    public Mono<ApiResponse> getProducts(@RequestHeader("Company-ID") Long companyId) {
+    public Mono<ApiResponse<List<ProductRespDto>>> getProducts(@RequestHeader("Company-ID") Long companyId) {
         return productService.findProducts(companyId)
-                .map(mapper::toDto)
-                .collectList()
-                .map(ApiSuccessResponse::of);
+                .map(mapper::toDto).collectList()
+                .map(ApiResponse::success);
     }
 
-    @GetMapping("/{id}")
-    public Mono<ApiResponse> getProductById(@RequestHeader("Company-ID") Long companyId,
-                                            @PathVariable Long id) {
-        return productService.findProductById(companyId, id)
+    @GetMapping("/{productId}")
+    public Mono<ApiResponse<ProductRespDto>> getProductById(@RequestHeader("Company-ID") Long companyId,
+                                                            @PathVariable Long productId) {
+        return productService.findProductById(companyId, productId)
                 .map(mapper::toDto)
-                .map(ApiSuccessResponse::of);
+                .map(ApiResponse::success);
     }
 
     @PostMapping
-    public Mono<ApiResponse> postProduct(@RequestHeader("Company-ID") Long companyId,
-                                         @RequestBody ProductBodyDto product) {
+    public Mono<ApiResponse<ProductRespDto>> postProduct(@RequestHeader("Company-ID") Long companyId,
+                                                         @RequestBody ProductBodyDto product) {
         return productService.createNewProduct(companyId, mapper.toEntity(product))
                 .map(mapper::toDto)
-                .map(ApiSuccessResponse::of);
+                .map(ApiResponse::success);
     }
 
-    @PutMapping("/{id}")
-    public Mono<ApiResponse> editProductById(@RequestHeader("Company-ID") Long companyId,
-                                             @PathVariable Long id, @RequestBody ProductBodyDto product) {
-        return productService.editProductById(companyId, id, mapper.toEntity(product))
+    @PutMapping("/{productId}")
+    public Mono<ApiResponse<ProductRespDto>> editProductById(@RequestHeader("Company-ID") Long companyId,
+                                                             @PathVariable Long productId,
+                                                             @RequestBody ProductBodyDto product) {
+        return productService.editProductById(companyId, productId, mapper.toEntity(product))
                 .map(mapper::toDto)
-                .map(ApiSuccessResponse::of);
+                .map(ApiResponse::success);
     }
 
-    @DeleteMapping("/{id}")
-    public Mono<Void> deleteProductById(@RequestHeader("Company-ID") Long companyId,
-                                        @PathVariable Long id) {
-        return productService.removeProductById(companyId, id);
+    @DeleteMapping("/{productId}")
+    public Mono<ApiResponse<Void>> deleteProductById(@RequestHeader("Company-ID") Long companyId,
+                                                     @PathVariable Long productId) {
+        return productService.removeProductById(companyId, productId)
+                .map(ApiResponse::success);
     }
 
 }
